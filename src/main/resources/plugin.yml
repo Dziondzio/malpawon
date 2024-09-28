@@ -2,7 +2,7 @@ name: malpawon
 version: '1.3'
 main: org.dziondzio.malpawon.Malpawon
 api-version: '1.21'
-prefix: zgnmain>
+prefix: Zagrajnia>
 authors: [ dziondzio ]
 description: Wygania malpe
 website: https://malpa.zagrajnia.pl
