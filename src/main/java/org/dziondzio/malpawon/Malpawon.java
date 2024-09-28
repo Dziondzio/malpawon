@@ -23,7 +23,7 @@ public class Malpawon extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Malpawon wyganiacz włączono");
+        getLogger().info("Malpawon wyganiacz włączono xd");
         getCommand("malpasprawdz").setExecutor(new CheckBanCommand(this));
         startBanChecker();
     }
@@ -32,32 +32,36 @@ public class Malpawon extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-
                 Bukkit.getScheduler().runTaskAsynchronously(Malpawon.this, () -> {
                     List<String> bannedNicks = getBannedNicks();
-
 
                     Bukkit.getScheduler().runTask(Malpawon.this, () -> {
                         for (String nick : bannedNicks) {
                             String trimmedNick = nick.trim();
                             getLogger().info("Checking player: " + trimmedNick);
-
                             Player player = Bukkit.getPlayer(trimmedNick);
 
                             if (player != null) {
-                                getLogger().info("Banning player: " + trimmedNick);
-                                Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
-                                player.kickPlayer("Papa małpo!");
+                                if (!Bukkit.getBanList(BanList.Type.NAME).isBanned(trimmedNick)) {
+                                    getLogger().info("Banning player: " + trimmedNick);
+                                    Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
+                                    player.kickPlayer("Papa małpo!");
+                                } else {
+                                    getLogger().info("Player " + trimmedNick + " is already banned.");
+                                }
                             } else {
                                 getLogger().info("Player " + trimmedNick + " is not online. Banning offline player.");
-
-                                Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
+                                if (!Bukkit.getBanList(BanList.Type.NAME).isBanned(trimmedNick)) {
+                                    Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
+                                } else {
+                                    getLogger().info("Player " + trimmedNick + " is already banned.");
+                                }
                             }
                         }
                     });
                 });
             }
-        }.runTaskTimer(this, 0L, 72000L); // co godzine sprawddza czy malpa jest
+        }.runTaskTimer(this, 0L, 72000L); // co godzinę sprawdza, czy małpa jest
     }
 
     public List<String> getBannedNicks() {
@@ -92,11 +96,6 @@ public class Malpawon extends JavaPlugin {
             getLogger().log(Level.SEVERE, "Error fetching banned nicks", e);
             return List.of();
         }
-    }
-
-    public boolean isPlayerBanned(String nickname) {
-        List<String> bannedNicks = getBannedNicks();
-        return bannedNicks.contains(nickname);
     }
 
     @Override

@@ -28,12 +28,10 @@ public class CheckBanCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-
         if (!player.hasPermission("malpawon.ban")) {
             player.sendMessage("Nie masz uprawnień do używania tej komendy.");
             return true;
         }
-
 
         List<String> bannedNicks = plugin.getBannedNicks();
         StringBuilder message = new StringBuilder("Sprawdzam zbanowanych graczy:\n");
@@ -42,14 +40,16 @@ public class CheckBanCommand implements CommandExecutor {
             String trimmedNick = nick.trim();
             Player targetPlayer = Bukkit.getPlayer(trimmedNick);
 
-
-            Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
-
-            if (targetPlayer != null) {
-                targetPlayer.kickPlayer("Papa małpo!");
-                message.append("Gracz ").append(trimmedNick).append(" został zbanowany.\n");
+            if (!Bukkit.getBanList(BanList.Type.NAME).isBanned(trimmedNick)) {
+                Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
+                if (targetPlayer != null) {
+                    targetPlayer.kickPlayer("Papa małpo!");
+                    message.append("Gracz ").append(trimmedNick).append(" został zbanowany.\n");
+                } else {
+                    message.append("Gracz ").append(trimmedNick).append(" nie jest online, ale został zbanowany.\n");
+                }
             } else {
-                message.append("Gracz ").append(trimmedNick).append(" nie jest online, ale został zbanowany.\n");
+                message.append("Gracz ").append(trimmedNick).append(" jest już zbanowany.\n");
             }
         }
 
