@@ -1,5 +1,5 @@
 name: malpawon
-version: '1.0'
+version: '1.2'
 main: org.dziondzio.malpawon.Malpawon
 api-version: '1.21'
 prefix: zgnmain>
@@ -9,5 +9,11 @@ website: https://malpa.zagrajnia.pl
 
 commands:
   malpasprawdz:
-    description: Sprawdź zbanowanych graczy
-    usage: /<command>
+    description: Sprawdza zbanowanych graczy
+    usage: /malpasprawdz
+    permission: malpawon.ban
+    permission-message: "Nie masz uprawnień do używania tej komendy."
+permissions:
+  malpawon.ban:
+    description: "Pozwala na używanie komendy malpasprawdz."
+    default: op

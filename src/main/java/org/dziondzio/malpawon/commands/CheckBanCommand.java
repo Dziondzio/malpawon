@@ -20,31 +20,41 @@ public class CheckBanCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Sprawdzanie, czy komenda jest używana przez gracza
+
         if (!(sender instanceof Player)) {
             sender.sendMessage("Ta komenda jest dostępna tylko dla graczy.");
             return true;
         }
 
-        // Pobranie zbanowanych graczy z API
+        Player player = (Player) sender;
+
+
+        if (!player.hasPermission("malpawon.ban")) {
+            player.sendMessage("Nie masz uprawnień do używania tej komendy.");
+            return true;
+        }
+
+
         List<String> bannedNicks = plugin.getBannedNicks();
         StringBuilder message = new StringBuilder("Sprawdzam zbanowanych graczy:\n");
 
         for (String nick : bannedNicks) {
-            // Sprawdzenie, czy gracz jest na serwerze
-            Player player = Bukkit.getPlayer(nick.trim());
-            if (player != null) {
-                // Banowanie gracza
-                Bukkit.getBanList(BanList.Type.NAME).addBan(nick.trim(), "Zostałeś zbanowany!", null, "Console");
-                player.kickPlayer("Zostałeś zbanowany!");
-                message.append("Gracz ").append(nick).append(" został zbanowany.\n");
+            String trimmedNick = nick.trim();
+            Player targetPlayer = Bukkit.getPlayer(trimmedNick);
+
+
+            Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
+
+            if (targetPlayer != null) {
+                targetPlayer.kickPlayer("Papa małpo!");
+                message.append("Gracz ").append(trimmedNick).append(" został zbanowany.\n");
             } else {
-                message.append("Gracz ").append(nick).append(" nie jest online.\n");
+                message.append("Gracz ").append(trimmedNick).append(" nie jest online, ale został zbanowany.\n");
             }
         }
 
-        // Wysyłanie podsumowania do gracza wykonującego komendę
-        sender.sendMessage(message.toString());
+
+        player.sendMessage(message.toString());
         return true;
     }
 }
