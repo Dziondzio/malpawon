@@ -1,0 +1,13 @@
+name: malpawon
+version: '1.0'
+main: org.dziondzio.malpawon.Malpawon
+api-version: '1.21'
+prefix: zgnmain>
+authors: [ dziondzio ]
+description: Wygania malpe
+website: https://malpa.zagrajnia.pl
+
+commands:
+  malpasprawdz:
+    description: Sprawdź zbanowanych graczy
+    usage: /<command>
