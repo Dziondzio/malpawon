@@ -115,7 +115,7 @@ public class Malpawon extends JavaPlugin implements Listener {
             reader.close();
 
             Gson gson = new Gson();
-            // Oczekujemy, że odpowiedź to tablica obiektów
+
             JsonArray nicksArray = gson.fromJson(response.toString(), JsonArray.class);
 
             cachedBannedNicks.clear();
