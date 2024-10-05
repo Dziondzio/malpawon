@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.dziondzio.malpawon.commands.CheckBanCommand;
 
 public class Malpawon extends JavaPlugin implements Listener {
@@ -97,18 +96,14 @@ public class Malpawon extends JavaPlugin implements Listener {
     public List<String> getBannedNicks() {
         long currentTime = System.currentTimeMillis();
 
-
         if (currentTime - lastFetchTime < FETCH_INTERVAL) {
             return cachedBannedNicks;
         }
 
         try {
-            URL url = new URL("https://malpa.zagrajnia.pl/api.php?user_id=1");
+            URL url = new URL("https://widzowiemalpy.pl/api/user/minecraft-nick");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-
-            // Zabezpieczenie API - użycie tokenu autoryzacji
-            connection.setRequestProperty("Authorization", "Bearer XZi29dskq@adwa");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder response = new StringBuilder();
@@ -120,8 +115,8 @@ public class Malpawon extends JavaPlugin implements Listener {
             reader.close();
 
             Gson gson = new Gson();
-            JsonObject jsonObject = gson.fromJson(response.toString(), JsonObject.class);
-            JsonArray nicksArray = jsonObject.getAsJsonArray("minecraft_nicks");
+            // Oczekujemy, że odpowiedź to tablica obiektów
+            JsonArray nicksArray = gson.fromJson(response.toString(), JsonArray.class);
 
             cachedBannedNicks.clear();
             nicksArray.forEach(element -> {
