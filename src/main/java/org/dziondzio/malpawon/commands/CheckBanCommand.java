@@ -21,15 +21,9 @@ public class CheckBanCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Ta komenda jest dostępna tylko dla graczy.");
-            return true;
-        }
 
-        Player player = (Player) sender;
-
-        if (!player.hasPermission("malpawon.ban")) {
-            player.sendMessage("Nie masz uprawnień do używania tej komendy.");
+        if (!(sender instanceof org.bukkit.command.ConsoleCommandSender)) {
+            sender.sendMessage("Ta komenda może być używana tylko z konsoli.");
             return true;
         }
 
@@ -40,21 +34,23 @@ public class CheckBanCommand implements CommandExecutor {
             String trimmedNick = nick.trim();
             Player targetPlayer = Bukkit.getPlayer(trimmedNick);
 
+
             if (!Bukkit.getBanList(BanList.Type.NAME).isBanned(trimmedNick)) {
+
                 Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
                 if (targetPlayer != null) {
                     targetPlayer.kickPlayer("Papa małpo!");
-                    message.append("Gracz ").append(trimmedNick).append(" został zbanowany.\n");
+                    message.append("Jacek ").append(trimmedNick).append(" został zbanowany.\n");
                 } else {
-                    message.append("Gracz ").append(trimmedNick).append(" nie jest online, ale został zbanowany.\n");
+                    message.append("Jacek ").append(trimmedNick).append(" nie jest online, ale został zbanowany.\n");
                 }
             } else {
-                message.append("Gracz ").append(trimmedNick).append(" jest już zbanowany.\n");
+                message.append("Jacek ").append(trimmedNick).append(" jest już zbanowany.\n");
             }
         }
 
 
-        player.sendMessage(message.toString());
+        sender.sendMessage(message.toString());
         return true;
     }
 }
