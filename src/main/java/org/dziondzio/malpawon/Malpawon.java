@@ -1,15 +1,21 @@
 package org.dziondzio.malpawon;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.entity.Player;
 import org.bukkit.BanList;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -19,14 +25,40 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.dziondzio.malpawon.commands.CheckBanCommand;
 
-public class Malpawon extends JavaPlugin {
+public class Malpawon extends JavaPlugin implements Listener {
+
+    private Set<String> blockedIPs = new HashSet<>();
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         getLogger().info("Malpawon wyganiacz włączono xd");
+
+        blockedIPs.addAll(getConfig().getStringList("blocked-ips"));
+
+
+        getLogger().info("Zablokowane IP: " + blockedIPs.toString());
+
+        getServer().getPluginManager().registerEvents(this, this);
         getCommand("malpasprawdz").setExecutor(new CheckBanCommand(this));
         startBanChecker();
     }
+
+
+    @EventHandler
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        String playerIP = event.getAddress().getHostAddress();
+
+
+        getLogger().info("Jacek próbuje się zalogować z IP: " + playerIP);
+
+        if (blockedIPs.contains(playerIP)) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Papa małpo!");
+            getLogger().info("Jacek o IP " + playerIP + " został wyrzucony z serwera.");
+        }
+    }
+
+
 
     private void startBanChecker() {
         new BukkitRunnable() {
@@ -38,23 +70,23 @@ public class Malpawon extends JavaPlugin {
                     Bukkit.getScheduler().runTask(Malpawon.this, () -> {
                         for (String nick : bannedNicks) {
                             String trimmedNick = nick.trim();
-                            getLogger().info("Checking player: " + trimmedNick);
+                            getLogger().info("Sprawdzanie jacka: " + trimmedNick);
                             Player player = Bukkit.getPlayer(trimmedNick);
 
                             if (player != null) {
                                 if (!Bukkit.getBanList(BanList.Type.NAME).isBanned(trimmedNick)) {
-                                    getLogger().info("Banning player: " + trimmedNick);
+                                    getLogger().info("Banowanie jacka: " + trimmedNick);
                                     Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
                                     player.kickPlayer("Papa małpo!");
                                 } else {
-                                    getLogger().info("Player " + trimmedNick + " is already banned.");
+                                    getLogger().info("Jacek " + trimmedNick + " jest zbanowany");
                                 }
                             } else {
-                                getLogger().info("Player " + trimmedNick + " is not online. Banning offline player.");
+                                getLogger().info("Jacek " + trimmedNick + " nie był tu jeszcze, ale zbanujemy go offline");
                                 if (!Bukkit.getBanList(BanList.Type.NAME).isBanned(trimmedNick)) {
                                     Bukkit.getBanList(BanList.Type.NAME).addBan(trimmedNick, "Papa małpo!", null, "Console");
                                 } else {
-                                    getLogger().info("Player " + trimmedNick + " is already banned.");
+                                    getLogger().info("Jacek " + trimmedNick + " jest już zbanowany");
                                 }
                             }
                         }
@@ -86,14 +118,17 @@ public class Malpawon extends JavaPlugin {
             List<String> bannedNicks = new ArrayList<>();
             nicksArray.forEach(element -> {
                 String nickname = element.getAsJsonObject().get("nickname").getAsString();
-                getLogger().info("Received nickname from API: " + nickname);
+                getLogger().info("Jacka niciki z api: " + nickname);
                 bannedNicks.add(nickname);
             });
 
             return bannedNicks;
 
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Network error while fetching banned nicks", e);
+            return List.of();
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Error fetching banned nicks", e);
+            getLogger().log(Level.SEVERE, "Error processing API response", e);
             return List.of();
         }
     }
