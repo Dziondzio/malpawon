@@ -1,9 +1,9 @@
 # 🛡️ Malpawon - Xenio Ban Plugin
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-Plugin-brightgreen?style=for-the-badge&logo=minecraft)
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.8-blue?style=for-the-badge)
 ![Compatibility](https://img.shields.io/badge/Minecraft-1.8.8%20to%201.21.1-orange?style=for-the-badge)
-![License](https://img.shields.io/github/license/yourusername/malpawon?style=for-the-badge)
+![License](https://img.shields.io/github/license/dziondzio/malpawon?style=for-the-badge)
 
 ## 📖 Opis
 
@@ -17,7 +17,7 @@
 
 ## 🚀 Instalacja
 
-1. Pobierz najnowszą wersję pluginu z sekcji [Releases](https://github.com/yourusername/malpawon/releases).
+1. Pobierz najnowszą wersję pluginu z sekcji [Releases](https://github.com/dziondzio/malpawon/releases).
 2. Skopiuj plik `.jar` do folderu `plugins` na Twoim serwerze Minecraft.
 3. Zrestartuj serwer lub użyj komendy `/reload` w celu załadowania pluginu.
 
@@ -30,15 +30,11 @@
 ## 🔧 API
 
 Plugin korzysta z API dostępnego na naszej stronie, które co godzinę odświeża informacje o graczach.
-
-## 🖼️ Zrzuty Ekranu
-
-![Screenshot1](https://yourimageurl.com/screenshot1)
-![Screenshot2](https://yourimageurl.com/screenshot2)
+)
 
 ## 🤝 Wsparcie
 
-Jeśli masz pytania lub problemy, zgłoś je w sekcji [Issues](https://github.com/yourusername/malpawon/issues) lub napisz do nas bezpośrednio.
+Jeśli masz pytania lub problemy, zgłoś je w sekcji [Issues](https://github.com/dziondzio/malpawon/issues) lub napisz do nas bezpośrednio.
 
 ## 📝 Licencja
 
