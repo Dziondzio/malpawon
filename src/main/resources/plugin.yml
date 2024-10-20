@@ -5,7 +5,7 @@ api-version: '1.21'
 prefix: JacekWon
 authors: [ dziondzio ]
 description: Wygania malpe
-website: https://malpa.zagrajnia.pl
+website: https://widzowiemalpy.pl
 
 commands:
   malpasprawdz:
